@@ -6,7 +6,7 @@ using DrawingBrushes = System.Drawing.Brushes;
 using DrawingColor = System.Drawing.Color;
 using Forms = System.Windows.Forms;
 
-namespace GrokUsageMonitor;
+namespace usage;
 
 internal sealed class TrayService : IDisposable
 {

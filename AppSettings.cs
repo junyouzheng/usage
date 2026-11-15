@@ -5,17 +5,27 @@ using Path = System.IO.Path;
 using File = System.IO.File;
 using Directory = System.IO.Directory;
 
-namespace GrokUsageMonitor;
+namespace usage;
 
 internal static class AppSettings
 {
     private static readonly JsonSerializerOptions JsonOpts = new() { WriteIndented = true };
     private static readonly string Dir = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "GrokUsageMonitor");
+        "usage");
     private static readonly string PathFile = Path.Combine(Dir, "settings.json");
     private const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
-    private const string RunName = "GrokUsageMonitor";
+    private const string RunName = "usage";
+    private const string LegacyRunName = "GrokUsageMonitor";
+
+    static AppSettings()
+    {
+        var legacyDir = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "GrokUsageMonitor");
+        if (!Directory.Exists(Dir) && Directory.Exists(legacyDir))
+            Directory.Move(legacyDir, Dir);
+    }
 
     public static string DataDir => Dir;
 
@@ -57,6 +67,9 @@ internal static class AppSettings
         {
             key.DeleteValue(RunName, throwOnMissingValue: false);
         }
+
+        if (key.GetValue(LegacyRunName) is not null)
+            key.DeleteValue(LegacyRunName, throwOnMissingValue: false);
     }
 }
 

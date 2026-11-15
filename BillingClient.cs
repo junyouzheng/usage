@@ -5,7 +5,7 @@ using System.Text.Json;
 using Path = System.IO.Path;
 using File = System.IO.File;
 
-namespace GrokUsageMonitor;
+namespace usage;
 
 internal static class BillingClient
 {
@@ -223,7 +223,7 @@ internal static class BillingClient
     private static HttpClient CreateHttp()
     {
         var client = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
-        client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "GrokUsageMonitor/1.0");
+        client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "usage/1.0");
         return client;
     }
 }

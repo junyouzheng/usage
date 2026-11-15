@@ -7,8 +7,8 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
-    <AssemblyName>GrokUsageMonitor</AssemblyName>
-    <RootNamespace>GrokUsageMonitor</RootNamespace>
+    <AssemblyName>usage</AssemblyName>
+    <RootNamespace>usage</RootNamespace>
     <Version>1.0.3</Version>
     <Product>Grok 用量监控</Product>
     <Description>实时监控 Grok 订阅周额度</Description>

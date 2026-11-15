@@ -8,7 +8,7 @@ using System.Windows.Threading;
 using Microsoft.Win32;
 using Brush = System.Windows.Media.Brush;
 
-namespace GrokUsageMonitor;
+namespace usage;
 
 public partial class MainWindow : Window, INotifyPropertyChanged
 {

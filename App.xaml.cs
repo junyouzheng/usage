@@ -5,7 +5,7 @@ using Path = System.IO.Path;
 using File = System.IO.File;
 using Directory = System.IO.Directory;
 
-namespace GrokUsageMonitor;
+namespace usage;
 
 public partial class App : System.Windows.Application
 {
@@ -26,7 +26,7 @@ public partial class App : System.Windows.Application
             return;
         }
 
-        _mutex = new Mutex(true, @"Local\GrokUsageMonitor.SingleInstance", out var created);
+        _mutex = new Mutex(true, @"Local\usage.SingleInstance", out var created);
         if (!created)
         {
             System.Windows.MessageBox.Show("Grok 用量监控已经在运行。", "Grok 用量监控",

@@ -4,7 +4,7 @@ using Brush = System.Windows.Media.Brush;
 using Color = System.Windows.Media.Color;
 using ColorConverter = System.Windows.Media.ColorConverter;
 
-namespace GrokUsageMonitor;
+namespace usage;
 
 public sealed class UsageSnapshot
 {

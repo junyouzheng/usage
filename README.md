@@ -1,4 +1,4 @@
-# GrokUsageMonitor
+# usage
 
 Windows 托盘程序，用来查看 SuperGrok 周额度（Chat / Imagine / Build 共用额度池）。
 
@@ -6,7 +6,7 @@ Windows 托盘程序，用来查看 SuperGrok 周额度（Chat / Imagine / Build
 
 ## 下载
 
-到 [Releases](https://github.com/junyouzheng/GrokUsageMonitor/releases) 下载 `GrokUsageMonitor.exe`，双击运行。自包含单文件，不需要单独安装 .NET。
+到 [Releases](https://github.com/junyouzheng/usage/releases) 下载 `usage.exe`，双击运行。自包含单文件，不需要单独安装 .NET。
 
 ## 功能
 
@@ -21,7 +21,7 @@ Windows 托盘程序，用来查看 SuperGrok 周额度（Chat / Imagine / Build
 命令行一次性查询：
 
 ```bat
-GrokUsageMonitor.exe --once
+usage.exe --once
 ```
 
 ## 重新编译

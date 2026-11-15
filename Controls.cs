@@ -7,7 +7,7 @@ using Pen = System.Windows.Media.Pen;
 using Point = System.Windows.Point;
 using Size = System.Windows.Size;
 
-namespace GrokUsageMonitor;
+namespace usage;
 
 public sealed class RingGauge : FrameworkElement
 {

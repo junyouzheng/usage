@@ -5,7 +5,7 @@ using Point = System.Windows.Point;
 using Rect = System.Windows.Rect;
 using Size = System.Windows.Size;
 
-namespace GrokUsageMonitor;
+namespace usage;
 
 internal static class WindowAnchor
 {
