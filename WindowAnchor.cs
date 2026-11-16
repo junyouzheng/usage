@@ -10,34 +10,36 @@ namespace usage;
 internal static class WindowAnchor
 {
     public const double Width = 400;
-    public const double Height = 640;
     private const double EdgeMarginPx = 4;
 
     public static void SnapToWorkAreaEdge(Window window)
     {
         var work = WorkAreaDip(window);
         var margin = MarginDip(window);
-        var size = FitSize(work, margin);
-        if (Math.Abs(window.Width - size.Width) > 0.5)
-            window.MinWidth = window.MaxWidth = window.Width = size.Width;
-        if (Math.Abs(window.Height - size.Height) > 0.5)
-            window.MinHeight = window.MaxHeight = window.Height = size.Height;
+        var availW = Math.Max(1, work.Width - margin.Width * 2);
+        var availH = Math.Max(1, work.Height - margin.Height * 2);
+        var width = Math.Min(Width, availW);
+        if (Math.Abs(window.Width - width) > 0.5)
+            window.MinWidth = window.MaxWidth = window.Width = width;
 
-        var left = Math.Max(work.Left, work.Right - size.Width - margin.Width);
-        var top = Math.Max(work.Top, work.Bottom - size.Height - margin.Height);
+        var height = window.ActualHeight;
+        if (height < 1 || double.IsNaN(height))
+            height = window.DesiredSize.Height;
+        if (height > availH)
+        {
+            window.MaxHeight = availH;
+            window.Height = availH;
+            height = availH;
+        }
+
+        var left = Math.Max(work.Left, work.Right - width - margin.Width);
+        var top = Math.Max(work.Top, work.Bottom - height - margin.Height);
 
         if (Math.Abs(window.Left - left) > 1 || Math.Abs(window.Top - top) > 1)
         {
             window.Left = left;
             window.Top = top;
         }
-    }
-
-    private static Size FitSize(Rect work, Size margin)
-    {
-        var availW = Math.Max(1, work.Width - margin.Width * 2);
-        var availH = Math.Max(1, work.Height - margin.Height * 2);
-        return new Size(Math.Min(Width, availW), Math.Min(Height, availH));
     }
 
     private static Size MarginDip(Window window)
