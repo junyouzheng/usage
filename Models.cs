@@ -124,6 +124,12 @@ public sealed class ProductShare
     public double Percent { get; init; }
 }
 
+public sealed class HistoryPoint
+{
+    public DateTimeOffset At { get; set; }
+    public double UsedPercent { get; set; }
+}
+
 internal sealed class BillingResponse
 {
     [JsonPropertyName("config")] public BillingConfig? Config { get; set; }

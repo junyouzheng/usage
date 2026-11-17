@@ -73,6 +73,83 @@ internal static class AppSettings
     }
 }
 
+internal static class HistoryStore
+{
+    private static readonly string PathFile = Path.Combine(AppSettings.DataDir, "history.jsonl");
+    private static readonly TimeSpan Keep = TimeSpan.FromDays(7);
+    private static readonly List<HistoryPoint> Points = [];
+    private static bool _loaded;
+
+    public static void Append(UsageSnapshot snap)
+    {
+        if (snap.Error is not null) return;
+        EnsureLoaded();
+        Points.Add(new HistoryPoint { At = snap.FetchedAt, UsedPercent = snap.UsedPercent });
+        Directory.CreateDirectory(AppSettings.DataDir);
+        File.AppendAllText(PathFile, JsonSerializer.Serialize(Points[^1]) + Environment.NewLine);
+    }
+
+    public static IReadOnlyList<HistoryPoint> LoadPoints(TimeSpan window)
+    {
+        EnsureLoaded();
+        var cutoff = DateTimeOffset.Now - window;
+        if (Points.Count > 0 && Points[0].At < cutoff)
+        {
+            var removed = Points.RemoveAll(p => p.At < cutoff);
+            if (removed >= 60) Rewrite();
+        }
+
+        var list = new List<HistoryPoint>(Points.Count);
+        foreach (var point in Points)
+        {
+            if (point.At >= cutoff) list.Add(point);
+        }
+
+        return list;
+    }
+
+    private static void EnsureLoaded()
+    {
+        if (_loaded) return;
+        _loaded = true;
+        if (!File.Exists(PathFile)) return;
+
+        var cutoff = DateTimeOffset.Now - Keep;
+        var dropped = false;
+        foreach (var line in File.ReadLines(PathFile))
+        {
+            if (string.IsNullOrWhiteSpace(line)) continue;
+            try
+            {
+                var point = JsonSerializer.Deserialize<HistoryPoint>(line);
+                if (point is null) continue;
+                if (point.At < cutoff)
+                {
+                    dropped = true;
+                    continue;
+                }
+
+                Points.Add(point);
+            }
+            catch
+            {
+                dropped = true;
+            }
+        }
+
+        if (dropped) Rewrite();
+    }
+
+    private static void Rewrite()
+    {
+        Directory.CreateDirectory(AppSettings.DataDir);
+        var tmp = PathFile + ".tmp";
+        File.WriteAllLines(tmp, Points.Select(p => JsonSerializer.Serialize(p)));
+        File.Copy(tmp, PathFile, overwrite: true);
+        File.Delete(tmp);
+    }
+}
+
 internal static class SnapshotStore
 {
     private static readonly JsonSerializerOptions JsonOpts = new() { WriteIndented = true };
