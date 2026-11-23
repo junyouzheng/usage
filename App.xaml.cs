@@ -26,17 +26,24 @@ public partial class App : System.Windows.Application
             return;
         }
 
+        // The Run key launches with --silent so sign-in does not open the window.
+        var silent = e.Args.Any(a => string.Equals(a, "--silent", StringComparison.OrdinalIgnoreCase));
+
         _mutex = new Mutex(true, @"Local\usage.SingleInstance", out var created);
         if (!created)
         {
-            System.Windows.MessageBox.Show("Grok 用量监控已经在运行。", "Grok 用量监控",
-                MessageBoxButton.OK, MessageBoxImage.Information);
+            if (!silent)
+            {
+                System.Windows.MessageBox.Show("Grok 用量监控已经在运行。", "Grok 用量监控",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
             Shutdown();
             return;
         }
 
         var window = new MainWindow();
-        window.Show();
+        if (!silent)
+            window.Show();
     }
 
     protected override void OnExit(ExitEventArgs e)

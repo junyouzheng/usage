@@ -27,6 +27,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     public MainWindow()
     {
         _settings = AppSettings.Load();
+        if (_settings.StartWithWindows)
+            AppSettings.RefreshStartupCommand();
         InitializeComponent();
         DataContext = this;
 

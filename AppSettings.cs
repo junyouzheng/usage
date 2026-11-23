@@ -61,7 +61,7 @@ internal static class AppSettings
         if (enabled)
         {
             var exe = Environment.ProcessPath ?? System.Windows.Forms.Application.ExecutablePath;
-            key.SetValue(RunName, $"\"{exe}\"");
+            key.SetValue(RunName, $"\"{exe}\" --silent");
         }
         else if (key.GetValue(RunName) is not null)
         {
@@ -70,6 +70,51 @@ internal static class AppSettings
 
         if (key.GetValue(LegacyRunName) is not null)
             key.DeleteValue(LegacyRunName, throwOnMissingValue: false);
+    }
+
+    // Upgrade this exe's Run command to --silent. Do not retarget a different build.
+    public static void RefreshStartupCommand()
+    {
+        using var key = Registry.CurrentUser.OpenSubKey(RunKey, writable: true);
+        if (key?.GetValue(RunName) is not string current || string.IsNullOrWhiteSpace(current))
+            return;
+
+        var exe = Environment.ProcessPath ?? System.Windows.Forms.Application.ExecutablePath;
+        if (!CommandLaunchesExe(current, exe))
+            return;
+
+        var desired = $"\"{exe}\" --silent";
+        if (!string.Equals(current, desired, StringComparison.Ordinal))
+            key.SetValue(RunName, desired);
+    }
+
+    private static bool CommandLaunchesExe(string command, string exe)
+    {
+        var trimmed = command.Trim();
+        string registered;
+        if (trimmed.StartsWith('"'))
+        {
+            var end = trimmed.IndexOf('"', 1);
+            if (end <= 1) return false;
+            registered = trimmed[1..end];
+        }
+        else
+        {
+            var space = trimmed.IndexOf(' ');
+            registered = space < 0 ? trimmed : trimmed[..space];
+        }
+
+        try
+        {
+            return string.Equals(
+                Path.GetFullPath(registered),
+                Path.GetFullPath(exe),
+                StringComparison.OrdinalIgnoreCase);
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
 
