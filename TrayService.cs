@@ -14,22 +14,15 @@ internal sealed class TrayService : IDisposable
     private readonly Icon?[] _icons = new Icon?[101];
     private int _shown = -1;
     private readonly Action _toggle;
-    private readonly Action _exit;
-    private readonly Action _toggleStartup;
-    private readonly Func<bool> _startupEnabled;
 
-    public TrayService(Action toggle, Action exit, Action toggleStartup, Func<bool> startupEnabled)
+    public TrayService(Action toggle)
     {
         _toggle = toggle;
-        _exit = exit;
-        _toggleStartup = toggleStartup;
-        _startupEnabled = startupEnabled;
 
         _icon = new Forms.NotifyIcon
         {
             Visible = true,
-            Text = "Grok 用量监控",
-            ContextMenuStrip = BuildMenu()
+            Text = "Grok 用量监控"
         };
         _icon.MouseClick += (_, e) =>
         {
@@ -62,22 +55,6 @@ internal sealed class TrayService : IDisposable
         _icon.Visible = false;
         _icon.Dispose();
         foreach (var icon in _icons) icon?.Dispose();
-    }
-
-    private Forms.ContextMenuStrip BuildMenu()
-    {
-        var menu = new Forms.ContextMenuStrip();
-        var startup = new Forms.ToolStripMenuItem("开机自启动") { Checked = _startupEnabled() };
-        startup.Click += (_, _) =>
-        {
-            _toggleStartup();
-            startup.Checked = _startupEnabled();
-        };
-        menu.Opening += (_, _) => startup.Checked = _startupEnabled();
-        menu.Items.Add(startup);
-        menu.Items.Add(new Forms.ToolStripSeparator());
-        menu.Items.Add("退出", null, (_, _) => _exit());
-        return menu;
     }
 
     private static Icon MakeIcon(int remaining)

@@ -50,6 +50,11 @@
                        VerticalAlignment="Center"/>
             <Button Style="{StaticResource GoldButton}" Content="刷新" Click="OnRefreshClick"
                     Padding="10,3" FontSize="12" Margin="8,0,0,0"/>
+            <Button Style="{StaticResource GhostButton}" Content="自启动" Click="OnStartupClick"
+                    Foreground="{Binding StartupForeground}" Background="{Binding StartupBackground}"
+                    Padding="8,3" FontSize="12" Margin="4,0,0,0" ToolTip="开机时静默启动"/>
+            <Button Style="{StaticResource RedButton}" Content="退出" Click="OnExitClick"
+                    Padding="8,3" FontSize="12" Margin="4,0,0,0" ToolTip="退出程序"/>
           </StackPanel>
         </Grid>
       </Border>

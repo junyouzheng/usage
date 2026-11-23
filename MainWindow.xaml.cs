@@ -32,7 +32,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         InitializeComponent();
         DataContext = this;
 
-        _tray = new TrayService(ToggleWindow, ExitApp, ToggleStartup, () => _settings.StartWithWindows);
+        _tray = new TrayService(ToggleWindow);
         if (SnapshotStore.Load() is { } cached)
             ApplySnapshot(cached);
         else
@@ -71,7 +71,11 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    private static readonly SolidColorBrush StartupOnBackground = CreateStartupOnBrush();
+
     public Brush StatusBrush => _snap?.StatusBrush ?? Palette.Muted;
+    public Brush StartupForeground => _settings.StartWithWindows ? Palette.Gold : Palette.Muted;
+    public Brush StartupBackground => _settings.StartWithWindows ? StartupOnBackground : System.Windows.Media.Brushes.Transparent;
     public Brush RingBrush => UsedPercent >= 90 ? Palette.Red
         : UsedPercent >= 75 ? Palette.Amber
         : Palette.Gold;
@@ -200,10 +204,15 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private async void OnRefreshClick(object sender, RoutedEventArgs e) => await RefreshAsync();
 
+    private void OnStartupClick(object sender, RoutedEventArgs e) => ToggleStartup();
+
+    private void OnExitClick(object sender, RoutedEventArgs e) => ExitApp();
+
     private void ToggleStartup()
     {
         _settings.StartWithWindows = !_settings.StartWithWindows;
         AppSettings.Save(_settings);
+        Raise(nameof(StartupForeground), nameof(StartupBackground));
     }
 
     private void ToggleWindow()
@@ -279,6 +288,13 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         _clockTimer.Stop();
         _tray.Dispose();
         System.Windows.Application.Current.Shutdown();
+    }
+
+    private static SolidColorBrush CreateStartupOnBrush()
+    {
+        var brush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x3A, 0x30, 0x18));
+        brush.Freeze();
+        return brush;
     }
 
     private void Raise(params string[] names)
