@@ -24,32 +24,22 @@
 
   <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Background="{StaticResource BgBrush}">
     <DockPanel>
-      <Border DockPanel.Dock="Top" Height="40" Background="{StaticResource BgBrush}">
-        <Grid VerticalAlignment="Center" Margin="12,0,10,0">
+      <Border DockPanel.Dock="Bottom" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0"
+              Background="{StaticResource BgBrush}" Padding="12,8,10,8" MinHeight="40">
+        <Grid VerticalAlignment="Center">
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
           </Grid.ColumnDefinitions>
-          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-            <Grid Width="16" Height="16" Margin="0,0,8,0" VerticalAlignment="Center">
-              <Ellipse Width="12" Height="12" Stroke="{Binding StatusBrush}" StrokeThickness="1.8"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
-              <Line X1="9" Y1="1.5" X2="15" Y2="7.5"
-                    Stroke="#F3EEE4" StrokeThickness="1.7"
-                    StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
-            </Grid>
-            <TextBlock Text="GROK 用量" FontSize="12" FontWeight="SemiBold"
-                       Foreground="{StaticResource TextBrush}" VerticalAlignment="Center"/>
-          </StackPanel>
-          <TextBlock Grid.Column="1" Text="{Binding ErrorText}" Visibility="{Binding ErrorVisibility}"
-                     Foreground="#FFB4B4" FontSize="11" VerticalAlignment="Center"
-                     TextTrimming="CharacterEllipsis" Margin="8,0"/>
-          <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+          <StackPanel VerticalAlignment="Center" Margin="0,0,8,0">
+            <TextBlock Text="{Binding ErrorText}" Visibility="{Binding ErrorVisibility}"
+                       Foreground="#FFB4B4" FontSize="11" TextTrimming="CharacterEllipsis"/>
             <TextBlock Text="{Binding FooterText}" Foreground="{StaticResource MutedBrush}" FontSize="11"
-                       VerticalAlignment="Center" Visibility="{Binding NormalActionsVisibility}"/>
+                       TextTrimming="CharacterEllipsis" Visibility="{Binding NormalActionsVisibility}"/>
+          </StackPanel>
+          <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
             <Button Style="{StaticResource GoldButton}" Content="刷新" Click="OnRefreshClick"
-                    Padding="10,3" FontSize="12" Margin="8,0,0,0"
+                    Padding="10,3" FontSize="12"
                     Visibility="{Binding NormalActionsVisibility}"/>
             <Button Style="{StaticResource GhostButton}" Content="自启动" Click="OnStartupClick"
                     Foreground="{Binding StartupForeground}" Background="{Binding StartupBackground}"
@@ -70,7 +60,7 @@
         </Grid>
       </Border>
 
-      <StackPanel Margin="14,8,14,10">
+      <StackPanel Margin="14,12,14,12">
         <Grid Margin="0,0,0,12">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
