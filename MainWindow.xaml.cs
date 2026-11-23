@@ -22,6 +22,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private bool _fetching;
     private bool _snapping;
     private bool _ignoreTrayToggle;
+    private bool _confirmingExit;
     private string? _refreshError;
 
     public MainWindow()
@@ -76,6 +77,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     public Brush StatusBrush => _snap?.StatusBrush ?? Palette.Muted;
     public Brush StartupForeground => _settings.StartWithWindows ? Palette.Gold : Palette.Muted;
     public Brush StartupBackground => _settings.StartWithWindows ? StartupOnBackground : System.Windows.Media.Brushes.Transparent;
+    public Visibility NormalActionsVisibility => _confirmingExit ? Visibility.Collapsed : Visibility.Visible;
+    public Visibility ConfirmExitVisibility => _confirmingExit ? Visibility.Visible : Visibility.Collapsed;
     public Brush RingBrush => UsedPercent >= 90 ? Palette.Red
         : UsedPercent >= 75 ? Palette.Amber
         : Palette.Gold;
@@ -206,7 +209,15 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void OnStartupClick(object sender, RoutedEventArgs e) => ToggleStartup();
 
-    private void OnExitClick(object sender, RoutedEventArgs e) => ExitApp();
+    private void OnExitClick(object sender, RoutedEventArgs e)
+    {
+        _confirmingExit = true;
+        Raise(nameof(NormalActionsVisibility), nameof(ConfirmExitVisibility));
+    }
+
+    private void OnCancelExitClick(object sender, RoutedEventArgs e) => CancelExitConfirm();
+
+    private void OnConfirmExitClick(object sender, RoutedEventArgs e) => ExitApp();
 
     private void ToggleStartup()
     {
@@ -237,8 +248,16 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void HideToTray()
     {
+        CancelExitConfirm();
         ShowInTaskbar = false;
         Hide();
+    }
+
+    private void CancelExitConfirm()
+    {
+        if (!_confirmingExit) return;
+        _confirmingExit = false;
+        Raise(nameof(NormalActionsVisibility), nameof(ConfirmExitVisibility));
     }
 
     private void SnapToEdge()

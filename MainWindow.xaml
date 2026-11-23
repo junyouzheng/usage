@@ -47,14 +47,25 @@
                      TextTrimming="CharacterEllipsis" Margin="8,0"/>
           <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
             <TextBlock Text="{Binding FooterText}" Foreground="{StaticResource MutedBrush}" FontSize="11"
-                       VerticalAlignment="Center"/>
+                       VerticalAlignment="Center" Visibility="{Binding NormalActionsVisibility}"/>
             <Button Style="{StaticResource GoldButton}" Content="刷新" Click="OnRefreshClick"
-                    Padding="10,3" FontSize="12" Margin="8,0,0,0"/>
+                    Padding="10,3" FontSize="12" Margin="8,0,0,0"
+                    Visibility="{Binding NormalActionsVisibility}"/>
             <Button Style="{StaticResource GhostButton}" Content="自启动" Click="OnStartupClick"
                     Foreground="{Binding StartupForeground}" Background="{Binding StartupBackground}"
-                    Padding="8,3" FontSize="12" Margin="4,0,0,0" ToolTip="开机时静默启动"/>
+                    Padding="8,3" FontSize="12" Margin="4,0,0,0" ToolTip="开机时静默启动"
+                    Visibility="{Binding NormalActionsVisibility}"/>
             <Button Style="{StaticResource RedButton}" Content="退出" Click="OnExitClick"
-                    Padding="8,3" FontSize="12" Margin="4,0,0,0" ToolTip="退出程序"/>
+                    Padding="8,3" FontSize="12" Margin="4,0,0,0" ToolTip="退出程序"
+                    Visibility="{Binding NormalActionsVisibility}"/>
+            <TextBlock Text="确认退出" Foreground="{StaticResource TextBrush}" FontSize="12"
+                       VerticalAlignment="Center" Visibility="{Binding ConfirmExitVisibility}"/>
+            <Button Style="{StaticResource GhostButton}" Content="取消" Click="OnCancelExitClick"
+                    Padding="8,3" FontSize="12" Margin="6,0,0,0"
+                    Visibility="{Binding ConfirmExitVisibility}"/>
+            <Button Style="{StaticResource RedButton}" Content="确认" Click="OnConfirmExitClick"
+                    Padding="8,3" FontSize="12" Margin="4,0,0,0" ToolTip="结束程序"
+                    Visibility="{Binding ConfirmExitVisibility}"/>
           </StackPanel>
         </Grid>
       </Border>
