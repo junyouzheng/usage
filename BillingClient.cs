@@ -16,31 +16,6 @@ internal static class BillingClient
         PropertyNameCaseInsensitive = true
     };
 
-    // docs.x.ai/grok/faq lists the usage breakdown as
-    // API, Build, Chat, image & video generation, Voice.
-    // Grok Bot and Cursor keep the names on their own docs pages.
-    private static readonly Dictionary<string, string> ProductNames = new(StringComparer.OrdinalIgnoreCase)
-    {
-        ["GrokChat"] = "Chat",
-        ["Chat"] = "Chat",
-        ["GrokBuild"] = "Build",
-        ["Build"] = "Build",
-        ["GrokImagine"] = "image & video generation",
-        ["Imagine"] = "image & video generation",
-        ["GrokBot"] = "Grok Bot",
-        ["Bot"] = "Grok Bot",
-        ["Voice"] = "Voice",
-        ["Api"] = "API",
-        ["API"] = "API",
-        ["Cursor"] = "Cursor"
-    };
-
-    internal static string OfficialProductName(string? id)
-    {
-        if (string.IsNullOrWhiteSpace(id)) return "";
-        return ProductNames.TryGetValue(id, out var label) ? label : id;
-    }
-
     public static async Task<UsageSnapshot> FetchAsync(CancellationToken ct)
     {
         var auth = await AuthService.LoadFreshAsync(ct);
@@ -84,7 +59,8 @@ internal static class BillingClient
             .Select(p => new ProductShare
             {
                 Id = p.Product!,
-                Label = OfficialProductName(p.Product),
+                Label = ProductStyle.Label(p.Product),
+                Color = ProductStyle.Brush(p.Product),
                 Percent = p.UsagePercent ?? 0
             })
             .OrderByDescending(p => p.Percent)

@@ -251,8 +251,8 @@ internal static class SnapshotStore
                 Products = (dto.Products ?? []).Select(p => new ProductShare
                 {
                     Id = p.Id,
-                    Label = BillingClient.OfficialProductName(
-                        string.IsNullOrWhiteSpace(p.Id) ? p.Label : p.Id),
+                    Label = ProductStyle.Label(string.IsNullOrWhiteSpace(p.Id) ? p.Label : p.Id),
+                    Color = ProductStyle.Brush(string.IsNullOrWhiteSpace(p.Id) ? p.Label : p.Id),
                     Percent = p.Percent
                 }).ToList()
             };

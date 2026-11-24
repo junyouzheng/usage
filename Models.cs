@@ -108,8 +108,13 @@ internal static class Palette
     public static readonly SolidColorBrush Green = Solid("#7DDAA0");
     public static readonly SolidColorBrush Gold = Solid("#E2B66A");
     public static readonly SolidColorBrush Track = Solid("#2A2E36");
+    public static readonly SolidColorBrush CursorBlue = Solid("#7AA2FF");
+    public static readonly SolidColorBrush Imagine = Solid("#E38BC8");
+    public static readonly SolidColorBrush Bot = Solid("#5EC8C8");
+    public static readonly SolidColorBrush Voice = Solid("#C4B5FD");
+    public static readonly SolidColorBrush Api = Solid("#C3B08A");
 
-    private static SolidColorBrush Solid(string hex)
+    internal static SolidColorBrush Solid(string hex)
     {
         var brush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(hex)!);
         brush.Freeze();
@@ -122,6 +127,41 @@ public sealed class ProductShare
     public string Id { get; init; } = "";
     public string Label { get; init; } = "";
     public double Percent { get; init; }
+
+    [JsonIgnore]
+    public Brush Color { get; init; } = Palette.Gold;
+}
+
+internal static class ProductStyle
+{
+    private static readonly Dictionary<string, (string Label, SolidColorBrush Brush)> Map = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["GrokBuild"] = ("Build", Palette.Gold),
+        ["Build"] = ("Build", Palette.Gold),
+        ["Cursor"] = ("Cursor", Palette.CursorBlue),
+        ["GrokChat"] = ("Chat", Palette.Green),
+        ["Chat"] = ("Chat", Palette.Green),
+        ["GrokImagine"] = ("Imagine", Palette.Imagine),
+        ["Imagine"] = ("Imagine", Palette.Imagine),
+        ["GrokBot"] = ("Bot", Palette.Bot),
+        ["Bot"] = ("Bot", Palette.Bot),
+        ["Voice"] = ("Voice", Palette.Voice),
+        ["Api"] = ("API", Palette.Api),
+        ["API"] = ("API", Palette.Api)
+    };
+
+    public static string Label(string? id)
+    {
+        if (string.IsNullOrWhiteSpace(id)) return "";
+        return Map.TryGetValue(id, out var style) ? style.Label : id;
+    }
+
+    public static Brush Brush(string? id)
+    {
+        if (!string.IsNullOrWhiteSpace(id) && Map.TryGetValue(id, out var style))
+            return style.Brush;
+        return Palette.Muted;
+    }
 }
 
 public sealed class HistoryPoint
