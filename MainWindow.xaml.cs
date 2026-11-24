@@ -53,6 +53,11 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         SourceInitialized += (_, _) => HideFromTaskbar();
         Loaded += (_, _) => SnapToEdge();
         ContentRendered += (_, _) => SnapToEdge();
+        SizeChanged += (_, e) =>
+        {
+            if (e.HeightChanged)
+                SnapToEdge();
+        };
     }
 
     private void HideFromTaskbar()

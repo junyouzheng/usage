@@ -42,7 +42,7 @@
             <TextBlock Text="{Binding ErrorText}" Visibility="{Binding ErrorVisibility}"
                        Foreground="#FFB4B4" FontSize="11" TextTrimming="CharacterEllipsis"/>
             <Border Background="#1C1F26" BorderBrush="{StaticResource GoldDimBrush}" BorderThickness="1"
-                    CornerRadius="8" Padding="8,3" HorizontalAlignment="Left" VerticalAlignment="Center"
+                    CornerRadius="8" Padding="8,3" MinHeight="34" HorizontalAlignment="Left" VerticalAlignment="Center"
                     Visibility="{Binding NormalActionsVisibility}">
               <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBlock Text="{Binding FooterLabel}" Foreground="{Binding FooterLabelBrush}"
