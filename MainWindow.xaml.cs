@@ -105,13 +105,23 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     public ObservableCollection<ProductShare> Products { get; } = new();
     public string EmptyProducts => Products.Count == 0 ? "暂无产品拆分" : "";
     public IReadOnlyList<HistoryPoint> History { get; private set; } = Array.Empty<HistoryPoint>();
-    public string FooterText => _fetching
+    public string FooterLabel => _fetching
         ? "刷新中"
         : _snap?.Error is not null
             ? "刷新失败"
             : _snap is null
                 ? "尚未刷新"
-                : $"更新于 {FormatFetched(_snap.FetchedAt)}";
+                : "更新于";
+    public string FooterClock => !_fetching && _snap?.Error is null && _snap is not null
+        ? FormatFetched(_snap.FetchedAt)
+        : "";
+    public Brush FooterLabelBrush => _fetching
+        ? Palette.Gold
+        : _snap?.Error is not null
+            ? Palette.Red
+            : Palette.Muted;
+    public Visibility FooterClockVisibility =>
+        string.IsNullOrEmpty(FooterClock) ? Visibility.Collapsed : Visibility.Visible;
     public string ErrorText => _refreshError ?? _snap?.Error ?? "";
     public Visibility ErrorVisibility => string.IsNullOrWhiteSpace(ErrorText) ? Visibility.Collapsed : Visibility.Visible;
 
@@ -119,7 +129,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     {
         if (!await _gate.WaitAsync(0)) return;
         _fetching = true;
-        Raise(nameof(FooterText));
+        RaiseFooter();
         try
         {
             var snap = await Task.Run(() => BillingClient.FetchAsync(_cts.Token));
@@ -148,14 +158,15 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             }
             else
             {
-                Raise(nameof(FooterText), nameof(ErrorText), nameof(ErrorVisibility));
+                RaiseFooter();
+                Raise(nameof(ErrorText), nameof(ErrorVisibility));
             }
         }
         finally
         {
             _fetching = false;
             _gate.Release();
-            Raise(nameof(FooterText));
+            RaiseFooter();
         }
     }
 
@@ -177,8 +188,12 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             nameof(UsedPercent), nameof(RemainingText), nameof(UsedLine), nameof(ResetLine),
             nameof(PaceLine), nameof(RunoutLine), nameof(PeriodType), nameof(PeriodRange),
             nameof(PrepaidText), nameof(PoolHint), nameof(EmptyProducts), nameof(History),
-            nameof(FooterText), nameof(ErrorText), nameof(ErrorVisibility));
+            nameof(FooterLabel), nameof(FooterClock), nameof(FooterLabelBrush), nameof(FooterClockVisibility),
+            nameof(ErrorText), nameof(ErrorVisibility));
     }
+
+    private void RaiseFooter() =>
+        Raise(nameof(FooterLabel), nameof(FooterClock), nameof(FooterLabelBrush), nameof(FooterClockVisibility));
 
     private static string FormatFetched(DateTimeOffset at)
     {

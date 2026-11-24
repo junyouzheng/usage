@@ -15,6 +15,8 @@
     <SolidColorBrush x:Key="AmberBrush" Color="#E8B44C"/>
     <SolidColorBrush x:Key="RedBrush" Color="#E85D5D"/>
     <SolidColorBrush x:Key="TitleBtnHover" Color="#2A2E36"/>
+    <FontFamily x:Key="UiFont">Noto Sans SC, Microsoft YaHei UI</FontFamily>
+    <FontFamily x:Key="DisplayFont">Noto Serif SC, Noto Sans SC, Microsoft YaHei UI</FontFamily>
 
     <Style x:Key="GhostButton" TargetType="Button">
       <Setter Property="Background" Value="Transparent"/>
@@ -78,8 +80,9 @@
       <Setter Property="Foreground" Value="#F3EEE4"/>
       <Setter Property="BorderThickness" Value="0"/>
       <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="FontFamily" Value="{StaticResource UiFont}"/>
       <Setter Property="FontSize" Value="13"/>
-      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="FontWeight" Value="Medium"/>
       <Setter Property="Padding" Value="16,8"/>
       <Setter Property="Template">
         <Setter.Value>
@@ -104,8 +107,9 @@
       <Setter Property="Foreground" Value="#F3EEE4"/>
       <Setter Property="BorderThickness" Value="0"/>
       <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="FontFamily" Value="{StaticResource UiFont}"/>
       <Setter Property="FontSize" Value="13"/>
-      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="FontWeight" Value="Medium"/>
       <Setter Property="Padding" Value="16,8"/>
       <Setter Property="Template">
         <Setter.Value>

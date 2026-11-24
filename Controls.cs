@@ -209,7 +209,7 @@ public sealed class Sparkline : FrameworkElement
             $"已用 {point.UsedPercent:0.#}%   {local:MM-dd HH:mm}",
             CultureInfo.CurrentCulture,
             System.Windows.FlowDirection.LeftToRight,
-            new Typeface("Segoe UI"),
+            new Typeface(new System.Windows.Media.FontFamily("Noto Sans SC, Microsoft YaHei UI"), FontStyles.Normal, FontWeights.Normal, FontStretches.Normal),
             12,
             LabelText,
             dpi);

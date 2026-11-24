@@ -13,7 +13,10 @@
         AllowsTransparency="False"
         ResizeMode="NoResize"
         ShowInTaskbar="False"
-        FontFamily="Segoe UI, Microsoft YaHei UI"
+        FontFamily="{StaticResource UiFont}"
+        UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="ClearType"
         Closing="OnClosing"
         LocationChanged="OnLocationChanged"
         Activated="OnActivated"
@@ -28,19 +31,30 @@
               Background="{StaticResource BgBrush}" Padding="12,8,10,8" MinHeight="40">
         <Grid VerticalAlignment="Center">
           <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
           </Grid.ColumnDefinitions>
-          <StackPanel VerticalAlignment="Center" Margin="0,0,8,0">
+          <Button Grid.Column="0" Style="{StaticResource GoldButton}" Content="刷新" Click="OnRefreshClick"
+                  Padding="10,3" FontSize="12" Margin="0,0,8,0" VerticalAlignment="Center"
+                  Visibility="{Binding NormalActionsVisibility}"/>
+          <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,8,0">
             <TextBlock Text="{Binding ErrorText}" Visibility="{Binding ErrorVisibility}"
                        Foreground="#FFB4B4" FontSize="11" TextTrimming="CharacterEllipsis"/>
-            <TextBlock Text="{Binding FooterText}" Foreground="{StaticResource MutedBrush}" FontSize="11"
-                       TextTrimming="CharacterEllipsis" Visibility="{Binding NormalActionsVisibility}"/>
+            <Border Background="#1C1F26" BorderBrush="{StaticResource GoldDimBrush}" BorderThickness="1"
+                    CornerRadius="8" Padding="8,3" HorizontalAlignment="Left" VerticalAlignment="Center"
+                    Visibility="{Binding NormalActionsVisibility}">
+              <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="{Binding FooterLabel}" Foreground="{Binding FooterLabelBrush}"
+                           FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding FooterClock}" Foreground="{StaticResource GoldBrush}"
+                           FontFamily="{StaticResource DisplayFont}" FontSize="16" FontWeight="Light"
+                           Margin="6,0,0,0" VerticalAlignment="Center"
+                           Visibility="{Binding FooterClockVisibility}"/>
+              </StackPanel>
+            </Border>
           </StackPanel>
-          <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-            <Button Style="{StaticResource GoldButton}" Content="刷新" Click="OnRefreshClick"
-                    Padding="10,3" FontSize="12"
-                    Visibility="{Binding NormalActionsVisibility}"/>
+          <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
             <Button Style="{StaticResource GhostButton}" Content="自启动" Click="OnStartupClick"
                     Foreground="{Binding StartupForeground}" Background="{Binding StartupBackground}"
                     Padding="8,3" FontSize="12" Margin="4,0,0,0" ToolTip="开机时静默启动"
@@ -67,12 +81,14 @@
             <ColumnDefinition Width="Auto"/>
           </Grid.ColumnDefinitions>
           <StackPanel>
-            <TextBlock Text="{Binding AccountLine}" FontSize="13"/>
+            <TextBlock Text="{Binding AccountLine}" FontFamily="{StaticResource DisplayFont}"
+                       FontSize="16" FontWeight="Light"/>
             <TextBlock Text="{Binding Email}" Foreground="{StaticResource MutedBrush}" FontSize="11"
-                       Margin="0,2,0,0" TextTrimming="CharacterEllipsis"/>
+                       Margin="0,3,0,0" TextTrimming="CharacterEllipsis"/>
           </StackPanel>
           <Border Grid.Column="1" Background="#242018" CornerRadius="8" Padding="10,4" VerticalAlignment="Center">
-            <TextBlock Text="{Binding Tier}" Foreground="{StaticResource GoldBrush}" FontSize="11" FontWeight="SemiBold"/>
+            <TextBlock Text="{Binding Tier}" FontFamily="{StaticResource DisplayFont}"
+                       Foreground="{StaticResource GoldBrush}" FontSize="12" FontWeight="Medium"/>
           </Border>
         </Grid>
 
@@ -85,8 +101,8 @@
             <local:RingGauge Value="{Binding UsedPercent}" Thickness="12"
                              TrackBrush="#2A2E36" FillBrush="{Binding RingBrush}"/>
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-              <TextBlock Text="{Binding RemainingText}" FontSize="22" FontWeight="Light"
-                         HorizontalAlignment="Center"/>
+              <TextBlock Text="{Binding RemainingText}" FontFamily="{StaticResource DisplayFont}"
+                         FontSize="28" FontWeight="Light" HorizontalAlignment="Center"/>
               <TextBlock Text="剩余" Foreground="{StaticResource MutedBrush}" FontSize="11"
                          HorizontalAlignment="Center" Margin="0,1,0,0"/>
             </StackPanel>
@@ -109,12 +125,14 @@
             </Grid.ColumnDefinitions>
             <StackPanel>
               <TextBlock Text="本周期" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
-              <TextBlock Text="{Binding PeriodType}" FontSize="15" Margin="0,3,0,0"/>
+              <TextBlock Text="{Binding PeriodType}" FontFamily="{StaticResource DisplayFont}"
+                         FontSize="18" FontWeight="Light" Margin="0,3,0,0"/>
               <TextBlock Text="{Binding PeriodRange}" Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="0,3,0,0" TextWrapping="Wrap"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Margin="10,0,0,0">
               <TextBlock Text="额外预付额度" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
-              <TextBlock Text="{Binding PrepaidText}" FontSize="15" Margin="0,3,0,0"/>
+              <TextBlock Text="{Binding PrepaidText}" FontFamily="{StaticResource DisplayFont}"
+                         FontSize="18" FontWeight="Light" Margin="0,3,0,0"/>
               <TextBlock Text="{Binding PoolHint}" Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="0,3,0,0" TextWrapping="Wrap"/>
             </StackPanel>
           </Grid>
@@ -145,7 +163,8 @@
                 <TextBlock Text="{Binding Label}" FontSize="12" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                 <local:PercentBar Grid.Column="1" Height="8" Margin="8,0" Value="{Binding Percent}" VerticalAlignment="Center"/>
                 <TextBlock Grid.Column="2" Text="{Binding Percent, StringFormat={}{0:0.#}%}"
-                           FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                           FontFamily="{StaticResource DisplayFont}" FontWeight="Light"
+                           FontSize="14" HorizontalAlignment="Right" VerticalAlignment="Center"/>
               </Grid>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
