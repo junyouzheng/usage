@@ -23,6 +23,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private bool _snapping;
     private bool _ignoreTrayToggle;
     private bool _confirmingExit;
+    private bool _holdAnchor;
     private string? _refreshError;
 
     public MainWindow()
@@ -55,7 +56,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         ContentRendered += (_, _) => SnapToEdge();
         SizeChanged += (_, e) =>
         {
-            if (e.HeightChanged)
+            if (!_holdAnchor && e.HeightChanged)
                 SnapToEdge();
         };
     }
@@ -231,8 +232,11 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     private void OnExitClick(object sender, RoutedEventArgs e)
     {
-        _confirmingExit = true;
-        Raise(nameof(NormalActionsVisibility), nameof(ConfirmExitVisibility));
+        HoldFrame(() =>
+        {
+            _confirmingExit = true;
+            Raise(nameof(NormalActionsVisibility), nameof(ConfirmExitVisibility));
+        });
     }
 
     private void OnCancelExitClick(object sender, RoutedEventArgs e) => CancelExitConfirm();
@@ -276,8 +280,41 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private void CancelExitConfirm()
     {
         if (!_confirmingExit) return;
-        _confirmingExit = false;
-        Raise(nameof(NormalActionsVisibility), nameof(ConfirmExitVisibility));
+        HoldFrame(() =>
+        {
+            _confirmingExit = false;
+            Raise(nameof(NormalActionsVisibility), nameof(ConfirmExitVisibility));
+        });
+    }
+
+    private void HoldFrame(Action change)
+    {
+        var left = Left;
+        var top = Top;
+        _holdAnchor = true;
+        try
+        {
+            change();
+            UpdateLayout();
+        }
+        finally
+        {
+            _holdAnchor = false;
+        }
+
+        if (Math.Abs(Left - left) > 0.5 || Math.Abs(Top - top) > 0.5)
+        {
+            _snapping = true;
+            try
+            {
+                Left = left;
+                Top = top;
+            }
+            finally
+            {
+                _snapping = false;
+            }
+        }
     }
 
     private void SnapToEdge()
