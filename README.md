@@ -1,6 +1,6 @@
 # usage
 
-Windows 托盘程序，用来查看 SuperGrok 周额度（Chat / Imagine / Build 共用额度池）。
+Windows 托盘程序，用来查看 SuperGrok 周额度（各产品共用同一周额度池）。
 
 登录信息读取自本机 `~/.grok/auth.json`（先运行 `grok login`）。程序不会把令牌写回该文件。
 

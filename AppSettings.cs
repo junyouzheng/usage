@@ -248,7 +248,13 @@ internal static class SnapshotStore
                 PeriodType = string.IsNullOrWhiteSpace(dto.PeriodType) ? "每周" : dto.PeriodType,
                 UnifiedPool = dto.UnifiedPool,
                 PrepaidUsd = dto.PrepaidUsd,
-                Products = dto.Products ?? []
+                Products = (dto.Products ?? []).Select(p => new ProductShare
+                {
+                    Id = p.Id,
+                    Label = BillingClient.OfficialProductName(
+                        string.IsNullOrWhiteSpace(p.Id) ? p.Label : p.Id),
+                    Percent = p.Percent
+                }).ToList()
             };
         }
         catch

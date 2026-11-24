@@ -105,7 +105,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         : "—";
     public string PrepaidText => _snap is null ? "$0.00" : $"${_snap.PrepaidUsd:0.00}";
     public string PoolHint => _snap?.UnifiedPool == true
-        ? "Chat / Imagine / Build 共用同一额度池"
+        ? "同一周额度池，按产品拆分"
         : "订阅周额度";
     public ObservableCollection<ProductShare> Products { get; } = new();
     public string EmptyProducts => Products.Count == 0 ? "暂无产品拆分" : "";
